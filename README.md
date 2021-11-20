@@ -53,3 +53,65 @@
 	#either here or as part of your profile.
     再启动
 
+
+##### 四.移植到Tomcat服务器上
+  1.进入到Solr的/server/solr-webapp下面，将webapp复制到Tomcat下面的webapps，并且重命名为solr
+  
+  	cp -r webapp  /data/app/tomcat-8/webapps/solr8
+  
+  2.复制关键架包
+    2.1 复制solr/dist下面的solr-dataimporthandler-*.jar到Tomcat下的WEB-INF/lib下
+    
+    	cp solr-dataimporthandler-*.jar /data/app/tomcat-8/webapps/solr8/WEB-INF/lib/
+
+    2.2进入到/server/lib/ext目录，将里面（下面）的所有架包复制
+    
+    	cd /data/app/solr-8.11.0/server/lib/ext/
+	cp * /data/app/tomcat-8/webapps/solr8/WEB-INF/lib/
+	
+    2.3进入到/server/lib目录，把里面以metrics开头的架包全部复制
+    
+    	cd /data/app/solr-8.11.0/server/lib
+	cp metrics*.jar /data/app/tomcat-8/webapps/solr8/WEB-INF/lib/
+	
+  3.复制配置文件 进入到/server/resources目录，将里面关于log4j的配置都进行复制 进tomcat/solr/WEB-INF/ 创建classes目录存放配置文件
+  	
+	cd /data/app/solr-8.11.0/server/resources/
+	cp log4j*.xml /data/app/tomcat-8/webapps/solr8/WEB-INF/classes/
+  
+  4.创建solr-home 目录
+  
+  	cd /data/app/solr-8.11.0/
+	mkdir solr-home
+  
+  4.编辑Tomcat下Solr的web.xml文件
+  
+  	cd /data/app/tomcat-8/webapps/solr8/WEB-INF/
+	vi web.xml
+      添加内容
+      	<env-entry>
+		<env-entry-name>/solr/home</env-entry-name>
+		<env-entry-value>/data/app/solr-8.11.0/solr-home</env-entry-value>
+		<env-entry-type>java.lang.String</env-entry-type>
+	</env-entry>
+	
+      注释下面内容	
+	
+	  <!-- Get rid of error message -->
+	 <!-- <security-constraint>
+	    <web-resource-collection>
+	      <web-resource-name>Disable TRACE</web-resource-name>
+	      <url-pattern>/</url-pattern>
+	      <http-method>TRACE</http-method>
+	    </web-resource-collection>
+	    <auth-constraint/>
+	  </security-constraint>-->
+    
+  5.复制配置文件
+  	
+	cd /data/app/solr-8.11.0/server/solr
+	cp -rf * /data/app/solr-8.11.0/solr-home/
+	
+  6.启动tomcat 通过8080端口访问
+
+  	
