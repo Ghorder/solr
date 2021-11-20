@@ -20,5 +20,6 @@
 		java -vsersion
 
 		
-##### 一.安装jdk 
+##### 一.安装tomcat
+  1.
 
